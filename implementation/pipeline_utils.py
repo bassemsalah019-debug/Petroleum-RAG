@@ -13,6 +13,13 @@ import fitz  # PyMuPDF
 from pathlib import Path
 
 import nltk
+# Download NLTK data at import time (needed for Streamlit Cloud where data isn't pre-installed)
+for _nltk_res in ["punkt", "punkt_tab", "stopwords", "wordnet", "omw-1.4"]:
+    try:
+        nltk.data.find(f"tokenizers/{_nltk_res}" if "punkt" in _nltk_res else f"corpora/{_nltk_res}")
+    except LookupError:
+        nltk.download(_nltk_res, quiet=True)
+
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
