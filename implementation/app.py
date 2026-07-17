@@ -64,7 +64,7 @@ from sentence_transformers import SentenceTransformer
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5"
 OLLAMA_MODEL = "deepseek-r1:1.5b"
-HF_MODEL = "HuggingFaceH4/zephyr-7b-beta"
+HF_MODEL = os.environ.get("HF_MODEL", "HuggingFaceH4/zephyr-7b-beta")
 HF_TOKEN = os.environ.get("HF_TOKEN", os.environ.get("HUGGING_FACE_HUB_TOKEN"))
 LLM_BACKEND = os.environ.get("LLM_BACKEND", "auto").lower()
 

@@ -41,7 +41,7 @@ from pipeline_utils import (
 # ---------------------------------------------------------------------------
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5"
-HF_MODEL = "HuggingFaceH4/zephyr-7b-beta"
+HF_MODEL = os.environ.get("HF_MODEL", "HuggingFaceH4/zephyr-7b-beta")
 HF_TOKEN = os.environ.get("HF_TOKEN", os.environ.get("HUGGING_FACE_HUB_TOKEN"))
 
 PDF_PATH = PROJECT_ROOT / "geokniga-drillingengineeringprasslwl.pdf"
