@@ -23,7 +23,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 import faiss
 
-import ollama
+try:
+    import ollama
+except ImportError:
+    ollama = None
 
 # Optional: Hugging Face Inference API (used when running on HF Spaces)
 try:
