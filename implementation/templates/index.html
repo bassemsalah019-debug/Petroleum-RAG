@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petroleum Engineering RAG</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-icon">&#9874;</div>
+            <div>
+                <h1>Petroleum Engineering RAG</h1>
+                <p class="subtitle">Ask questions about drilling engineering — powered by Retrieval-Augmented Generation</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Input Section -->
+        <section class="input-section">
+            <form id="chat-form">
+                <label for="question-input">Your Question</label>
+                <textarea
+                    id="question-input"
+                    placeholder="e.g. What is lost circulation? How does a BOP work? What causes differential sticking?"
+                    rows="3"
+                ></textarea>
+                <div class="input-actions">
+                    <span class="hint">Press <kbd>Enter</kbd> to send, <kbd>Shift+Enter</kbd> for new line</span>
+                    <button type="submit" id="ask-btn">
+                        <span class="btn-text">Ask</span>
+                        <span class="btn-loading" hidden>
+                            <span class="spinner"></span> Thinking...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Loading Indicator -->
+        <section id="loading-section" hidden>
+            <div class="loading-card">
+                <div class="loading-pulse"></div>
+                <p>Searching textbook and generating answer...</p>
+                <p class="loading-detail">Embedding question &rarr; FAISS search &rarr; Context building &rarr; DeepSeek generation</p>
+            </div>
+        </section>
+
+        <!-- Error Section -->
+        <section id="error-section" hidden>
+            <div class="error-card">
+                <span class="error-icon">&#9888;</span>
+                <div>
+                    <h3>Error</h3>
+                    <p id="error-message"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Answer Section -->
+        <section id="answer-section" hidden>
+            <div class="card answer-card">
+                <h2>Answer</h2>
+                <div id="answer-text" class="answer-text"></div>
+            </div>
+        </section>
+
+        <!-- Sources Section -->
+        <section id="sources-section" hidden>
+            <div class="card">
+                <h2>Retrieved Sources</h2>
+                <div id="sources-list" class="sources-list"></div>
+            </div>
+        </section>
+
+        <!-- Chunks Section -->
+        <section id="chunks-section" hidden>
+            <div class="card">
+                <h2>
+                    Retrieved Chunks
+                    <button id="toggle-chunks" class="toggle-btn" title="Show/hide chunks">&#9660;</button>
+                </h2>
+                <div id="chunks-list" class="chunks-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Petroleum Knowledge Assistant &mdash; RAG Pipeline with FAISS + DeepSeek-R1:1.5b</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
