@@ -362,23 +362,41 @@ Answer:'''
 # Generation (from notebook Cell 83)
 # ---------------------------------------------------------------------------
 
-def generate_answer(query, context_text, model_name="deepseek-r1:1.5b", prompt_builder=build_better_prompt):
-    """
-    Send a grounded prompt to our local Ollama server and return the generated answer.
-    """
+def generate_answer_hf(
+    query,
+    context_text,
+    model_name="Qwen/Qwen2.5-7B-Instruct",
+    prompt_builder=build_better_prompt,
+    hf_token=None,
+):
+    if InferenceClient is None:
+        return "huggingface_hub is not installed."
+
     prompt = prompt_builder(query, context_text)
+
     try:
-        response = ollama.chat(
+        client = InferenceClient(token=hf_token)
+
+        response = client.chat_completion(
             model=model_name,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful petroleum engineering assistant.",
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            max_tokens=512,
+            temperature=0.3,
         )
-        return response["message"]["content"]
+
+        return response.choices[0].message.content
+
     except Exception as e:
-        return (
-            "⚠️ Could not reach Ollama. Make sure Ollama is installed and running, "
-            f"and that you've pulled the model with `ollama pull {model_name}`.\n"
-            f"Underlying error: {e}"
-        )
+        return f"Hugging Face Error:\n{e}"
 
 
 # ---------------------------------------------------------------------------
