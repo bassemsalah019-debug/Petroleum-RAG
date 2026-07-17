@@ -369,44 +369,6 @@ def generate_answer_hf(
     prompt_builder=build_better_prompt,
     hf_token=None,
 ):
-    if InferenceClient is None:
-        return "huggingface_hub is not installed."
-
-    prompt = prompt_builder(query, context_text)
-
-    try:
-        client = InferenceClient(token=hf_token)
-
-        response = client.chat_completion(
-            model=model_name,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a helpful petroleum engineering assistant.",
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
-            ],
-            max_tokens=512,
-            temperature=0.3,
-        )
-
-        return response.choices[0].message.content
-
-    except Exception as e:
-        return f"Hugging Face Error:\n{e}"
-
-
-# ---------------------------------------------------------------------------
-# Hugging Face Inference API (for cloud deployment on HF Spaces)
-# ---------------------------------------------------------------------------
-
-def generate_answer_hf(query, context_text,
-                       model_name="HuggingFaceH4/zephyr-7b-beta",
-                       prompt_builder=build_better_prompt,
-                       hf_token=None):
     """
     Send a grounded prompt to the Hugging Face Inference API and return the answer.
     Uses the free serverless Inference API — no GPU needed.
@@ -422,11 +384,17 @@ def generate_answer_hf(query, context_text,
     # like Qwen2.5-7B-Instruct, Llama-3, etc.)
     try:
         response = client.chat_completion(
-            messages=[
-                {"role": "system", "content": "You are a helpful petroleum engineering assistant. Answer questions accurately using only the provided context."},
-                {"role": "user", "content": prompt},
-            ],
             model=model_name,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful petroleum engineering assistant. Answer questions accurately using only the provided context.",
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
             max_tokens=512,
             temperature=0.3,
         )
