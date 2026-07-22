@@ -35,11 +35,11 @@ try:
 except ImportError:
     ollama = None
 
-# Optional: Hugging Face Inference API (used when running on HF Spaces)
+# Optional: Groq API (free tier, OpenAI-compatible chat completions)
 try:
-    from huggingface_hub import InferenceClient
+    from groq import Groq
 except ImportError:
-    InferenceClient = None
+    Groq = None
 
 
 # ---------------------------------------------------------------------------
@@ -365,27 +365,30 @@ Answer:'''
 def generate_answer_hf(
     query,
     context_text,
-    model_name="Qwen/Qwen2.5-7B-Instruct",
+    model_name="qwen/qwen3-32b",
     prompt_builder=build_better_prompt,
     hf_token=None,
 ):
     """
-    Send a grounded prompt to the Hugging Face Inference API and return the answer.
-    Uses HF Inference Providers' chat_completion (conversational task), which is
-    what instruct/chat models like Qwen2.5-7B-Instruct actually support.
+    Send a grounded prompt to Groq's free Inference API and return the answer.
+    Groq has a generous free tier (no credit card, no monthly credit limit like
+    HF Inference Providers) for open-weight models such as Qwen3 and Llama 3.3,
+    served through an OpenAI-compatible chat completions endpoint.
+
+    Note: the `hf_token` parameter now holds the Groq API key (kept under the
+    old name so existing callers don't need to change their keyword argument).
     """
-    if InferenceClient is None:
-        return "⚠️ huggingface_hub is not installed. Run: pip install huggingface_hub"
+    if Groq is None:
+        return "⚠️ groq is not installed. Run: pip install groq"
+    if not hf_token:
+        return "⚠️ No Groq API key provided. Set the GROQ_API_KEY environment variable."
 
     prompt = prompt_builder(query, context_text)
-    client = InferenceClient(model=model_name, token=hf_token)
+    client = Groq(api_key=hf_token)
 
-    # Instruct/chat models like Qwen2.5-7B-Instruct are only served via the
-    # "conversational" task on HF Inference Providers. The old text_generation()
-    # call is not supported for these models and was removed — it always failed
-    # with "not supported for task text-generation", masking the real error.
     try:
-        response = client.chat_completion(
+        response = client.chat.completions.create(
+            model=model_name,
             messages=[
                 {
                     "role": "system",
@@ -402,7 +405,7 @@ def generate_answer_hf(
         return response.choices[0].message.content.strip()
     except Exception as e:
         return (
-            f"⚠️ Hugging Face Inference API error.\n"
+            f"⚠️ Groq Inference API error.\n"
             f"Model: {model_name}\n"
             f"Underlying error: {e}"
         )
