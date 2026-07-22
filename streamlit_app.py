@@ -172,57 +172,302 @@ def load_chunks_and_index():
 
 
 # ---------------------------------------------------------------------------
+# Custom CSS — Petroleum Engineering RAG Theme
+# ---------------------------------------------------------------------------
+
+def inject_custom_css():
+    """Inject custom CSS for a polished petroleum-themed UI."""
+    st.markdown("""
+    <style>
+    /* ── Global ─────────────────────────────────────────────────── */
+    .stApp {
+        background: linear-gradient(180deg, #0C1220 0%, #111927 100%);
+    }
+
+    /* ── Hero Banner ────────────────────────────────────────────── */
+    .hero-banner {
+        background: linear-gradient(135deg, #0F1A2E 0%, #1A2744 40%, #243352 100%);
+        border: 1px solid rgba(212, 168, 67, 0.25);
+        border-radius: 16px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(212, 168, 67, 0.08) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .hero-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #D4A843;
+        margin: 0 0 0.3rem 0;
+        letter-spacing: -0.02em;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+        color: #9CA3AF;
+        margin: 0;
+        font-weight: 400;
+    }
+    .hero-badge {
+        display: inline-block;
+        background: rgba(212, 168, 67, 0.15);
+        border: 1px solid rgba(212, 168, 67, 0.3);
+        color: #D4A843;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        margin-bottom: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* ── Sidebar ────────────────────────────────────────────────── */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0F1A2E 0%, #131B2E 100%);
+        border-right: 1px solid rgba(212, 168, 67, 0.12);
+    }
+    [data-testid="stSidebar"] [data-testid="stMarkdown"] h1,
+    [data-testid="stSidebar"] [data-testid="stMarkdown"] h2,
+    [data-testid="stSidebar"] [data-testid="stMarkdown"] h3 {
+        color: #D4A843 !important;
+    }
+
+    /* ── Chat Messages ──────────────────────────────────────────── */
+    [data-testid="stChatMessage"] {
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+        background: rgba(212, 168, 67, 0.06);
+        border-color: rgba(212, 168, 67, 0.12);
+    }
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Chat Input ─────────────────────────────────────────────── */
+    [data-testid="stChatInput"] {
+        border-radius: 12px;
+        border: 1px solid rgba(212, 168, 67, 0.2);
+        background: rgba(255, 255, 255, 0.04);
+    }
+    [data-testid="stChatInput"]:focus-within {
+        border-color: rgba(212, 168, 67, 0.5);
+        box-shadow: 0 0 0 2px rgba(212, 168, 67, 0.1);
+    }
+
+    /* ── Expanders ──────────────────────────────────────────────── */
+    [data-testid="stExpander"] {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+    }
+
+    /* ── Status Cards (sidebar) ─────────────────────────────────── */
+    .status-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.6rem;
+    }
+    .status-card .label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6B7280;
+        margin-bottom: 0.2rem;
+    }
+    .status-card .value {
+        font-size: 0.9rem;
+        color: #D4A843;
+        font-weight: 600;
+        font-family: 'Courier New', monospace;
+    }
+
+    /* ── Divider ────────────────────────────────────────────────── */
+    .gold-divider {
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(212, 168, 67, 0.3), transparent);
+        margin: 1rem 0;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    .footer {
+        text-align: center;
+        color: #4B5563;
+        font-size: 0.75rem;
+        padding: 1.5rem 0 0.5rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        margin-top: 2rem;
+    }
+
+    /* ── How It Works Steps ─────────────────────────────────────── */
+    .step-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.7rem;
+        margin-bottom: 0.6rem;
+    }
+    .step-num {
+        background: rgba(212, 168, 67, 0.15);
+        color: #D4A843;
+        font-size: 0.7rem;
+        font-weight: 700;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .step-text {
+        color: #9CA3AF;
+        font-size: 0.82rem;
+        line-height: 1.4;
+    }
+
+    /* ── Example Questions ──────────────────────────────────────── */
+    .example-q {
+        background: rgba(212, 168, 67, 0.06);
+        border: 1px solid rgba(212, 168, 67, 0.12);
+        border-radius: 8px;
+        padding: 0.5rem 0.8rem;
+        margin-bottom: 0.4rem;
+        color: #D1D5DB;
+        font-size: 0.82rem;
+        cursor: default;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------------------------
 # Streamlit UI
 # ---------------------------------------------------------------------------
 
 st.set_page_config(
-    page_title="Petroleum Engineering RAG",
+    page_title="Petroleum RAG — Drilling Engineering AI",
     page_icon="🛢️",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-st.title("🛢️ Petroleum Engineering RAG Chatbot")
-st.markdown(
-    "Ask questions about drilling engineering and get answers grounded in a petroleum engineering textbook."
-)
+inject_custom_css()
 
-# Sidebar with info
+# ── Hero Banner ─────────────────────────────────────────────────────────────
+st.markdown("""
+<div class="hero-banner">
+    <div class="hero-badge">🛢️ Retrieval-Augmented Generation</div>
+    <div class="hero-title">Petroleum Engineering RAG</div>
+    <p class="hero-subtitle">
+        AI-powered drilling engineering assistant — answers grounded in textbook evidence
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# ── Sidebar ─────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("About")
-    st.markdown(
-        "This chatbot uses **Retrieval-Augmented Generation (RAG)** to answer "
-        "petroleum engineering questions using a drilling engineering textbook as evidence."
-    )
-    st.markdown("---")
-    st.markdown(f"**Embedding model:** `{EMBEDDING_MODEL_NAME}`")
-    st.markdown(f"**LLM model:** `{HF_MODEL}`")
-    st.markdown("---")
+    st.markdown("### ⚙️ System Status")
+    st.markdown("")
 
     if not HF_TOKEN:
-        st.warning(
-            "⚠️ **HF_TOKEN not set.** Add it as a secret in your Streamlit Cloud settings "
-            "for the LLM to work."
-        )
+        st.warning("**HF_TOKEN** not set. Add it as a secret for the LLM to work.")
     else:
-        st.success("✅ HF_TOKEN is configured")
+        st.success("**HF_TOKEN** configured")
 
-    st.markdown("---")
-    st.markdown("Built with [Streamlit](https://streamlit.io) + [FAISS](https://faiss.ai/)")
+    st.markdown('<hr class="gold-divider">', unsafe_allow_html=True)
 
-# Load resources
+    st.markdown("### 🧠 Models")
+    st.markdown(f"""
+    <div class="status-card">
+        <div class="label">Embedding Model</div>
+        <div class="value">{EMBEDDING_MODEL_NAME}</div>
+    </div>
+    <div class="status-card">
+        <div class="label">LLM Model</div>
+        <div class="value">{HF_MODEL}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<hr class="gold-divider">', unsafe_allow_html=True)
+
+    st.markdown("### 📖 How It Works")
+    st.markdown("""
+    <div class="step-item"><div class="step-num">1</div><div class="step-text">You ask a question about drilling engineering</div></div>
+    <div class="step-item"><div class="step-num">2</div><div class="step-text">FAISS retrieves the most relevant textbook chunks</div></div>
+    <div class="step-item"><div class="step-num">3</div><div class="step-text">LLM generates an answer grounded in the evidence</div></div>
+    <div class="step-item"><div class="step-num">4</div><div class="step-text">Sources and chunks are shown for transparency</div></div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<hr class="gold-divider">', unsafe_allow_html=True)
+
+    st.markdown("### 💡 Try Asking")
+    st.markdown("""
+    <div class="example-q">"What is drill string design?"</div>
+    <div class="example-q">"How does rotary drilling work?"</div>
+    <div class="example-q">"Explain well control methods"</div>
+    <div class="example-q">"What are the types of drill bits?"</div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<hr class="gold-divider">', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="color: #4B5563; font-size: 0.75rem; line-height: 1.5;">
+        <strong style="color: #6B7280;">Tech Stack</strong><br>
+        Streamlit · FAISS · Sentence-Transformers · HuggingFace Inference API
+    </div>
+    """, unsafe_allow_html=True)
+
+# ── Load resources ──────────────────────────────────────────────────────────
 try:
-    with st.spinner("Loading embedding model and building index... (first run may take a few minutes)"):
+    with st.spinner("🔄 Loading embedding model and building index... (first run may take a few minutes)"):
         chunks_df, faiss_index = load_chunks_and_index()
-    st.sidebar.success(f"✅ {len(chunks_df)} chunks loaded, {faiss_index.ntotal} FAISS vectors")
+    st.sidebar.markdown(f"""
+    <div class="status-card">
+        <div class="label">Index Status</div>
+        <div class="value">✅ {len(chunks_df):,} chunks · {faiss_index.ntotal:,} vectors</div>
+    </div>
+    """, unsafe_allow_html=True)
 except Exception as e:
     st.error(f"❌ Failed to load resources: {e}")
     st.stop()
 
-# Initialize chat history
+# ── Chat History ────────────────────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history
+# Welcome message on first load
+if not st.session_state.messages:
+    st.markdown("""
+    <div style="text-align: center; padding: 2rem 1rem; color: #6B7280;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛢️</div>
+        <div style="font-size: 1.1rem; color: #D4A843; font-weight: 600; margin-bottom: 0.3rem;">
+            Welcome to Petroleum RAG
+        </div>
+        <div style="font-size: 0.9rem; max-width: 480px; margin: 0 auto; line-height: 1.6;">
+            Ask any question about drilling engineering. Answers are generated from a petroleum
+            engineering textbook using retrieval-augmented generation for accuracy.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
@@ -238,14 +483,12 @@ for message in st.session_state.messages:
                         f"> {chunk['text']}"
                     )
 
-# Chat input
+# ── Chat Input ──────────────────────────────────────────────────────────────
 if prompt := st.chat_input("Ask a petroleum engineering question..."):
-    # Add user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Generate answer
     with st.chat_message("assistant"):
         if not HF_TOKEN:
             st.error(
@@ -258,7 +501,7 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
                 "content": "❌ HF_TOKEN not configured. Please add it in Streamlit Cloud secrets.",
             })
         else:
-            with st.spinner("Searching textbook and generating answer..."):
+            with st.spinner("🔍 Searching textbook and generating answer..."):
                 try:
                     embedding_model = load_embedding_model()
 
@@ -278,7 +521,6 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
 
                     st.markdown(answer)
 
-                    # Sources
                     sources = []
                     if len(package["selected"]) > 0:
                         for _, row in package["selected"].iterrows():
@@ -293,7 +535,6 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
                             for src in sources:
                                 st.markdown(f"- **Page {src['page']}** — {src['chapter']}")
 
-                    # Retrieved chunks
                     retrieved_chunks = []
                     if len(package["candidates"]) > 0:
                         for _, row in package["candidates"].head(8).iterrows():
@@ -313,7 +554,6 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
                                     f"> {chunk['text']}"
                                 )
 
-                    # Save to history
                     st.session_state.messages.append({
                         "role": "assistant",
                         "content": answer,
@@ -328,3 +568,11 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
                         "role": "assistant",
                         "content": error_msg,
                     })
+
+# ── Footer ──────────────────────────────────────────────────────────────────
+st.markdown("""
+<div class="footer">
+    Petroleum Engineering RAG · Drilling Engineering Knowledge Base<br>
+    Built with Streamlit · FAISS · Sentence-Transformers · HuggingFace
+</div>
+""", unsafe_allow_html=True)
