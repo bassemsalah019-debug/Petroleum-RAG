@@ -41,7 +41,7 @@ from pipeline_utils import (
 # ---------------------------------------------------------------------------
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5"
-HF_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3-32b")
+HF_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 HF_TOKEN = os.environ.get("GROQ_API_KEY")
 
 PDF_PATH = PROJECT_ROOT / "geokniga-drillingengineeringprasslwl.pdf"
