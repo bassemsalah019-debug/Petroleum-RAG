@@ -9,7 +9,7 @@ A Retrieval-Augmented Generation (RAG) chatbot that answers petroleum engineerin
 </p>  
 
 <p align="center">
-  <a href="https://petroleum-rag-ftzg9bv987qglhurjku8yz.streamlit.app/">
+  <a href="https://petroleum-rag-aj8huw8mnmk74fqevbr8iu.streamlit.app/">
     <img src="https://img.shields.io/badge/OPEN%20LIVE%20APP-FFB000?style=for-the-badge&logo=streamlit&logoColor=white" />
   </a>
 </p>
