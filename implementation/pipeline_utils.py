@@ -365,7 +365,7 @@ Answer:'''
 def generate_answer_hf(
     query,
     context_text,
-    model_name="qwen/qwen3-32b",
+    model_name="openai/gpt-oss-120b",
     prompt_builder=build_better_prompt,
     hf_token=None,
 ):
