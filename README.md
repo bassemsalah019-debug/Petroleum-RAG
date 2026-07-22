@@ -4,7 +4,7 @@ A Retrieval-Augmented Generation (RAG) chatbot that answers petroleum engineerin
 
 <p align="center">
   <a href="https://petroleum-rag-ftzg9bv987qglhurjku8yz.streamlit.app/">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=30&duration=2500&pause=800&color=F7B500&center=true&vCenter=true&width=700&lines=🚀+Try+the+Petroleum+RAG+Application;🤖+AI-Powered+Document+Question+Answering;📚+Powered+by+FAISS+%2B+BGE+Embeddings+%2B+Qwen7B"/>
+    <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=30&duration=2500&pause=800&color=F7B500&center=true&vCenter=true&width=700&lines=🚀+Try+the+Petroleum+RAG+Application;🤖+AI-Powered+Document+Question+Answering;📚+Powered+by+FAISS+%2B+BGE+Embeddings+%2B+Groq"/>
   </a>
 </p>  
 
@@ -18,7 +18,7 @@ A Retrieval-Augmented Generation (RAG) chatbot that answers petroleum engineerin
 
 1. **You ask a question** about drilling engineering
 2. **FAISS vector search** finds the most relevant textbook passages
-3. **LLM generates an answer** grounded in those passages (Qwen2.5-7B via HF Inference API, or DeepSeek-R1:1.5b via Ollama)
+3. **LLM generates an answer** grounded in those passages (`openai/gpt-oss-120b` via the Groq API, or DeepSeek-R1:1.5b via Ollama)
 4. **Sources are cited** so you can verify the information
 
 ## Architecture
@@ -31,10 +31,10 @@ Question -> Embedding (bge-base-en-v1.5, 768d) -> FAISS Search -> Context Buildi
 | ----------------------- | ------------------------------------------------------------------------------------------- |
 | **Embedding Model**     | `BAAI/bge-base-en-v1.5` (768 dimensions)                                                    |
 | **Vector Store**        | FAISS with cosine similarity (IndexFlatIP on normalized vectors)                            |
-| **LLM Backend (Cloud)** | Hugging Face Inference API -- `Qwen/Qwen2.5-7B-Instruct` (default)                          |
+| **LLM Backend (Cloud)** | Groq API -- `openai/gpt-oss-120b` (default, free tier)                                      |
 | **LLM Backend (Local)** | Ollama + `deepseek-r1:1.5b`                                                                 |
 | **Source Textbook**     | *Drilling Engineering* -- 282-page PDF (Curtin University, Master of Petroleum Engineering) |
-| **Frontend (Cloud)**    | Streamlit (deployed on Hugging Face Spaces)                                                 |
+| **Frontend (Cloud)**    | Streamlit (deployed on Streamlit Community Cloud)                                           |
 | **Frontend (Local)**    | FastAPI + vanilla HTML/CSS/JS                                                               |
 
 ## Project Structure
@@ -42,7 +42,7 @@ Question -> Embedding (bge-base-en-v1.5, 768d) -> FAISS Search -> Context Buildi
 ``` text
 ├── README.md                                    # This file
 ├── requirements.txt                             # Streamlit deployment dependencies
-├── streamlit_app.py                             # Streamlit frontend (HF Spaces / Streamlit Cloud)
+├── streamlit_app.py                             # Streamlit frontend (Streamlit Community Cloud)
 ├── geokniga-drillingengineeringprasslwl.pdf     # Source textbook (282 pages)
 ├── .streamlit/
 │   └── config.toml                              # Streamlit theme (dark petroleum gold)
@@ -73,8 +73,8 @@ Question -> Embedding (bge-base-en-v1.5, 768d) -> FAISS Search -> Context Buildi
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Set your Hugging Face token (free: https://huggingface.co/settings/tokens)
-export HF_TOKEN=hf_your_token_here
+# 2. Set your Groq API key (free, no card required: https://console.groq.com/keys)
+export GROQ_API_KEY=gsk_your_key_here
 
 # 3. Run
 streamlit run streamlit_app.py
@@ -123,7 +123,7 @@ The RAG pipeline is built from scratch in `pipeline_utils.py`:
 6. **Embedding** -- `BAAI/bge-base-en-v1.5` encodes chunks + queries (768 dimensions, normalized)
 7. **Retrieval** -- FAISS IndexFlatIP for cosine similarity search (top-k=10 candidates)
 8. **Context Building** -- Deduplication, max 2 chunks per page, max 4 total, 220-word budget
-9. **Generation** -- Grounded prompt sent to LLM with source citations
+9. **Generation** -- Grounded prompt sent to LLM with source citations via Groq's OpenAI-compatible chat completions API
 
 ### Chapters in the Knowledge Base
 
@@ -152,7 +152,7 @@ The RAG pipeline is built from scratch in `pipeline_utils.py`:
 | **NLP**                | NLTK, scikit-learn                                      |
 | **Embeddings**         | sentence-transformers (`BAAI/bge-base-en-v1.5`)         |
 | **Vector Search**      | FAISS (faiss-cpu)                                       |
-| **LLM (Cloud)**        | Hugging Face Inference API (Qwen2.5-7B-Instruct)        |
+| **LLM (Cloud)**        | Groq API (`openai/gpt-oss-120b`, free tier)             |
 | **LLM (Local)**        | Ollama (deepseek-r1:1.5b)                               |
 | **Data**               | Pandas, NumPy                                           |
 
@@ -175,6 +175,7 @@ The project includes a comprehensive evaluation framework (documented in `Analys
 3. **No hybrid retrieval** -- no reranking or query expansion
 4. **Single-document scope** -- only one textbook; no cross-document reasoning
 5. **Fixed chunk size** -- 100 words / 25 overlap; not optimized per topic
+6. **Groq model availability** -- Groq periodically deprecates and replaces hosted models; check [console.groq.com/docs/deprecations](https://console.groq.com/docs/deprecations) if the configured model ID stops working
 
 ## License
 
