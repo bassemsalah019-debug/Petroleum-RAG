@@ -371,20 +371,21 @@ def generate_answer_hf(
 ):
     """
     Send a grounded prompt to the Hugging Face Inference API and return the answer.
-    Uses the free serverless Inference API — no GPU needed.
-    Supports both conversational models (e.g. Qwen) and text-generation models.
+    Uses HF Inference Providers' chat_completion (conversational task), which is
+    what instruct/chat models like Qwen2.5-7B-Instruct actually support.
     """
     if InferenceClient is None:
         return "⚠️ huggingface_hub is not installed. Run: pip install huggingface_hub"
 
     prompt = prompt_builder(query, context_text)
-    client = InferenceClient(token=hf_token)
+    client = InferenceClient(model=model_name, token=hf_token)
 
-    # Try chat_completion first (works for conversational / instruct models
-    # like Qwen2.5-7B-Instruct, Llama-3, etc.)
+    # Instruct/chat models like Qwen2.5-7B-Instruct are only served via the
+    # "conversational" task on HF Inference Providers. The old text_generation()
+    # call is not supported for these models and was removed — it always failed
+    # with "not supported for task text-generation", masking the real error.
     try:
         response = client.chat_completion(
-            model=model_name,
             messages=[
                 {
                     "role": "system",
@@ -399,19 +400,6 @@ def generate_answer_hf(
             temperature=0.3,
         )
         return response.choices[0].message.content.strip()
-    except Exception:
-        pass  # Fall through to text_generation
-
-    # Fall back to text_generation for raw completion models
-    try:
-        response = client.text_generation(
-            prompt,
-            model=model_name,
-            max_new_tokens=512,
-            temperature=0.3,
-            repetition_penalty=1.1,
-        )
-        return response.strip()
     except Exception as e:
         return (
             f"⚠️ Hugging Face Inference API error.\n"
