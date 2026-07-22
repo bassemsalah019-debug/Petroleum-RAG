@@ -41,8 +41,8 @@ from pipeline_utils import (
 # ---------------------------------------------------------------------------
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5"
-HF_MODEL = os.environ.get("HF_MODEL", "Qwen/Qwen2.5-7B-Instruct")
-HF_TOKEN = os.environ.get("HF_TOKEN", os.environ.get("HUGGING_FACE_HUB_TOKEN"))
+HF_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3-32b")
+HF_TOKEN = os.environ.get("GROQ_API_KEY")
 
 PDF_PATH = PROJECT_ROOT / "geokniga-drillingengineeringprasslwl.pdf"
 CACHE_DIR = PROJECT_ROOT / "implementation" / ".cache"
@@ -388,9 +388,9 @@ with st.sidebar:
     st.markdown("")
 
     if not HF_TOKEN:
-        st.warning("**HF_TOKEN** not set. Add it as a secret for the LLM to work.")
+        st.warning("**GROQ_API_KEY** not set. Add it as a secret for the LLM to work.")
     else:
-        st.success("**HF_TOKEN** configured")
+        st.success("**GROQ_API_KEY** configured")
 
     st.markdown('<hr class="gold-divider">', unsafe_allow_html=True)
 
@@ -431,7 +431,7 @@ with st.sidebar:
     st.markdown("""
     <div style="color: #4B5563; font-size: 0.75rem; line-height: 1.5;">
         <strong style="color: #6B7280;">Tech Stack</strong><br>
-        Streamlit · FAISS · Sentence-Transformers · HuggingFace Inference API
+        Streamlit · FAISS · Sentence-Transformers · Groq Inference API
     </div>
     """, unsafe_allow_html=True)
 
@@ -492,13 +492,13 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
     with st.chat_message("assistant"):
         if not HF_TOKEN:
             st.error(
-                "❌ **HF_TOKEN not set.** Please add your Hugging Face token as a secret in "
+                "❌ **GROQ_API_KEY not set.** Please add your Groq API key as a secret in "
                 "Streamlit Cloud settings → Secrets.\n\n"
-                "Get a token at: https://huggingface.co/settings/tokens"
+                "Get a free key at: https://console.groq.com/keys"
             )
             st.session_state.messages.append({
                 "role": "assistant",
-                "content": "❌ HF_TOKEN not configured. Please add it in Streamlit Cloud secrets.",
+                "content": "❌ GROQ_API_KEY not configured. Please add it in Streamlit Cloud secrets.",
             })
         else:
             with st.spinner("🔍 Searching textbook and generating answer..."):
@@ -573,6 +573,6 @@ if prompt := st.chat_input("Ask a petroleum engineering question..."):
 st.markdown("""
 <div class="footer">
     Petroleum Engineering RAG · Drilling Engineering Knowledge Base<br>
-    Built with Streamlit · FAISS · Sentence-Transformers · HuggingFace
+    Built with Streamlit · FAISS · Sentence-Transformers · Groq
 </div>
 """, unsafe_allow_html=True)
