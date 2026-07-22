@@ -13,7 +13,7 @@ sentence-transformers>=2.2.0
 faiss-cpu>=1.7.0
 
 # LLM backend (HF Inference API)
-huggingface_hub>=0.20.0
+huggingface_hub>=0.28.0
 
 # Data
 pandas>=2.0.0
