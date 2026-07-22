@@ -64,7 +64,7 @@ from sentence_transformers import SentenceTransformer
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5"
 OLLAMA_MODEL = "deepseek-r1:1.5b"
-HF_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3-32b")
+HF_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 HF_TOKEN = os.environ.get("GROQ_API_KEY")
 LLM_BACKEND = os.environ.get("LLM_BACKEND", "auto").lower()
 
