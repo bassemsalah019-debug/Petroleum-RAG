@@ -64,8 +64,8 @@ from sentence_transformers import SentenceTransformer
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5"
 OLLAMA_MODEL = "deepseek-r1:1.5b"
-HF_MODEL = os.environ.get("HF_MODEL", "HuggingFaceH4/zephyr-7b-beta")
-HF_TOKEN = os.environ.get("HF_TOKEN", os.environ.get("HUGGING_FACE_HUB_TOKEN"))
+HF_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3-32b")
+HF_TOKEN = os.environ.get("GROQ_API_KEY")
 LLM_BACKEND = os.environ.get("LLM_BACKEND", "auto").lower()
 
 # ---------------------------------------------------------------------------
@@ -234,9 +234,9 @@ def detect_backend():
     except Exception:
         pass
 
-    # Fall back to HF Inference API
+    # Fall back to Groq Inference API
     LLM_BACKEND = "hf"
-    logger.info(f"Auto-detected: Hugging Face Inference API with '{HF_MODEL}'")
+    logger.info(f"Auto-detected: Groq Inference API with '{HF_MODEL}'")
     return "hf"
 
 
@@ -259,11 +259,14 @@ def check_llm_backend():
             logger.error(f"Ollama check failed: {e}")
             return False
     else:
-        from pipeline_utils import InferenceClient
-        if InferenceClient is None:
-            logger.warning("huggingface_hub not installed — cannot use HF Inference API")
+        from pipeline_utils import Groq
+        if Groq is None:
+            logger.warning("groq package not installed — cannot use Groq Inference API")
             return False
-        logger.info(f"HF Inference API backend ready (model: {HF_MODEL})")
+        if not HF_TOKEN:
+            logger.warning("GROQ_API_KEY not set — cannot use Groq Inference API")
+            return False
+        logger.info(f"Groq Inference API backend ready (model: {HF_MODEL})")
         return True
 
 
@@ -359,7 +362,7 @@ async def chat(request: ChatRequest):
                 detail=(
                     "LLM backend not available. Please ensure either:\n"
                     "1. Ollama is running with deepseek-r1:1.5b pulled, OR\n"
-                    "2. HF_TOKEN environment variable is set for Hugging Face Inference API"
+                    "2. GROQ_API_KEY environment variable is set for Groq Inference API"
                 ),
             )
 
